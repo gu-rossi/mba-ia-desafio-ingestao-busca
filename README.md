@@ -1,6 +1,6 @@
 # Desafio MBA Engenharia de Software com IA - Full Cycle
 
-Este projeto implementa uma solução de Retrieval-Augmented Generation (RAG) que permite fazer perguntas sobre um documento PDF. A solução utiliza o LangChain para orquestrar o processo, um banco de dados PostgreSQL com a extensão `pgvector` para armazenar os embeddings do documento, e modelos de linguagem da OpenAI, Google ou Azure para gerar as respostas.
+Este projeto implementa uma solução de Retrieval-Augmented Generation (RAG) que permite fazer perguntas sobre um documento PDF. A solução utiliza o LangChain para orquestrar o processo, um banco de dados PostgreSQL com a extensão `pgvector` para armazenar os embeddings do documento, e modelos de linguagem da OpenAI, <del>Google</del> ou Azure para gerar as respostas.
 
 ## Arquitetura da Solução
 
@@ -43,10 +43,7 @@ Primeiro, configure o ambiente e instale as dependências.
 4.  **Configure as variáveis de ambiente:**
     - Renomeie o arquivo `.env.example` para `.env`.
     - Abra o `.env` e preencha com suas chaves de API (OpenAI, Google ou Azure).
-    - **Importante**: Caso os seus arquivos PDF estejam na raiz do projeto, não será necessário atualizar a variável `PDF_PATH` no arquivo `.env` pois o caminho padrão já está configurado com a variável vazia, se optar por incluir em uma subpasta chamada `docs` dentro da raiz do projeto, atualize a variável `PDF_PATH` com o caminho relativo. Por exemplo:
-      ```
-      PDF_PATH=docs
-      ```
+    - **Importante**: Não é necessário alterar a variável `PDF_PATH` se os arquivos PDF estiverem na raiz do projeto.
 
 5.  **Inicie o banco de dados com Docker:**
     ```bash
@@ -96,18 +93,13 @@ Para executar os códigos, é necessário ter chaves de API da OpenAI ou do Goog
 2.  Faça login e clique em "Create new secret key".
 3.  Copie a chave e cole no arquivo `.env` na variável `OPENAI_API_KEY`.
 
-#### Google Gemini
-
-1.  Acesse o [Google AI Studio](https://ai.google.dev/gemini-api/docs/api-key?hl=pt-BR).
-2.  Faça login e clique em "Create API Key".
-3.  Copie a chave e cole no arquivo `.env` na variável `GOOGLE_API_KEY`.
-
 ## Ordem de Precedência dos Provedores
 
 A aplicação foi projetada para ser flexível, permitindo o uso de diferentes provedores de modelos de linguagem (LLMs). A seleção do provedor é determinada pela presença de variáveis de ambiente específicas no seu arquivo `.env`, seguindo esta ordem de prioridade:
 
 1.  **Azure OpenAI**: Se a variável `AZURE_OPENAI_ENDPOINT` estiver definida, a aplicação usará os serviços do Azure OpenAI.
 2.  **OpenAI**: Se a variável do Azure não estiver configurada, mas a `OPENAI_API_KEY` estiver presente, a aplicação usará o modelo da OpenAI.
-3.  **Google Gemini**: Caso nenhuma das opções anteriores esteja configurada, a aplicação procurará pela `GOOGLE_API_KEY` e usará o modelo Gemini do Google.
+3.  **Google Gemini**: <del>Caso nenhuma das opções anteriores esteja configurada, a aplicação procurará pela `GOOGLE_API_KEY` e usará o modelo Gemini do Google.</del>
+O provedor do Google não está mais disponível, pois o modelo de embedding não teve desempenho suficiente para RAG ingênuo.
 
 Se nenhuma dessas variáveis de ambiente for encontrada, o sistema lançará um erro, informando que uma chave de API válida é necessária.

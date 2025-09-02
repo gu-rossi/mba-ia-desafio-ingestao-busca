@@ -1,7 +1,6 @@
 import os
 from dotenv import load_dotenv
 from langchain_openai import AzureOpenAIEmbeddings, OpenAIEmbeddings
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_postgres import PGVector
 from langchain.prompts import PromptTemplate
 from langchain_core.runnables import chain
@@ -39,7 +38,7 @@ load_dotenv()
 def get_embedding_model():
     """
     Retorna o modelo de embedding baseado nas variáveis de ambiente disponíveis.
-    Prioridade: Azure OpenAI > OpenAI > Google
+    Prioridade: Azure OpenAI > OpenAI
     """
     if os.getenv("AZURE_OPENAI_ENDPOINT"):
         if not os.getenv("OPENAI_API_KEY"):
@@ -47,8 +46,6 @@ def get_embedding_model():
         return AzureOpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
     elif os.getenv("OPENAI_API_KEY"):
         return OpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
-    elif os.getenv("GOOGLE_API_KEY"):
-        return GoogleGenerativeAIEmbeddings(model=os.getenv("GOOGLE_EMBEDDING_MODEL", "models/embedding-001"))
     else:
         raise ValueError("Nenhuma API key válida encontrada. Configure AZURE_OPENAI_ENDPOINT, OPENAI_API_KEY ou GOOGLE_API_KEY.")
 

@@ -1,6 +1,5 @@
 from search import search_prompt
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
-from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 import os
 
@@ -9,7 +8,7 @@ load_dotenv()
 def get_model():
     """
     Retorna o modelo de chat baseado nas variáveis de ambiente disponíveis.
-    Prioridade: Azure OpenAI > OpenAI > Google
+    Prioridade: Azure OpenAI > OpenAI
     """
     if os.getenv("AZURE_OPENAI_ENDPOINT"):
         print("Usando Azure OpenAI...")
@@ -19,9 +18,6 @@ def get_model():
     elif os.getenv("OPENAI_API_KEY"):
         print("Usando OpenAI...")
         return ChatOpenAI(model=os.getenv("OPENAI_CHAT_MODEL", "gpt-5-nano"), temperature=0.0)
-    elif os.getenv("GOOGLE_API_KEY"):
-        print("Usando Google Generative AI...")
-        return ChatGoogleGenerativeAI(model=os.getenv("GOOGLE_CHAT_MODEL", "gemini-pro"))
     else:
         raise ValueError("Nenhuma API key válida encontrada. Configure AZURE_OPENAI_ENDPOINT, OPENAI_API_KEY ou GOOGLE_API_KEY.")
 

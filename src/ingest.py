@@ -5,7 +5,6 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pathlib import Path
 from langchain_core.documents import Document
 from langchain_openai import AzureOpenAIEmbeddings, OpenAIEmbeddings
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_postgres import PGVector
 
 load_dotenv()
@@ -16,7 +15,7 @@ RAG_DIR = Path(__file__).parent.parent / PDF_PATH
 def get_embedding_model():
     """
     Retorna o modelo de embedding baseado nas variáveis de ambiente disponíveis.
-    Prioridade: Azure OpenAI > OpenAI > Google
+    Prioridade: Azure OpenAI > OpenAI
     """
     if os.getenv("AZURE_OPENAI_ENDPOINT"):
         print("Usando Azure OpenAI...")
@@ -26,9 +25,6 @@ def get_embedding_model():
     elif os.getenv("OPENAI_API_KEY"):
         print("Usando OpenAI...")
         return OpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
-    elif os.getenv("GOOGLE_API_KEY"):
-        print("Usando Google Generative AI...")
-        return GoogleGenerativeAIEmbeddings(model=os.getenv("GOOGLE_EMBEDDING_MODEL", "models/embedding-001"))
     else:
         raise ValueError("Nenhuma API key válida encontrada. Configure AZURE_OPENAI_ENDPOINT, OPENAI_API_KEY ou GOOGLE_API_KEY.")
 
