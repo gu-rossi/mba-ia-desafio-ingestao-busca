@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from langchain_openai import AzureOpenAIEmbeddings, OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain_postgres import PGVector
 from langchain.prompts import PromptTemplate
 from langchain_core.runnables import chain
@@ -35,21 +35,7 @@ RESPONDA A "PERGUNTA DO USUÁRIO"
 
 load_dotenv()
 
-def get_embedding_model():
-    """
-    Retorna o modelo de embedding baseado nas variáveis de ambiente disponíveis.
-    Prioridade: Azure OpenAI > OpenAI
-    """
-    if os.getenv("AZURE_OPENAI_ENDPOINT"):
-        if not os.getenv("OPENAI_API_KEY"):
-            raise ValueError("A chave da API do OpenAI não está definida.")
-        return AzureOpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
-    elif os.getenv("OPENAI_API_KEY"):
-        return OpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
-    else:
-        raise ValueError("Nenhuma API key válida encontrada. Configure AZURE_OPENAI_ENDPOINT, OPENAI_API_KEY ou GOOGLE_API_KEY.")
-
-embeddings = get_embedding_model()
+embeddings = OpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
 
 store = PGVector(
     embeddings=embeddings,

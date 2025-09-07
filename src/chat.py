@@ -1,27 +1,11 @@
 from search import search_prompt
-from langchain_openai import AzureChatOpenAI, ChatOpenAI
+from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-def get_model():
-    """
-    Retorna o modelo de chat baseado nas variáveis de ambiente disponíveis.
-    Prioridade: Azure OpenAI > OpenAI
-    """
-    if os.getenv("AZURE_OPENAI_ENDPOINT"):
-        print("Usando Azure OpenAI...")
-        if not os.getenv("OPENAI_API_KEY"):
-            raise ValueError("A chave da API do OpenAI não está definida.")
-        return AzureChatOpenAI(azure_deployment=os.getenv("OPENAI_CHAT_MODEL", "gpt-5-nano"))
-    elif os.getenv("OPENAI_API_KEY"):
-        print("Usando OpenAI...")
-        return ChatOpenAI(model=os.getenv("OPENAI_CHAT_MODEL", "gpt-5-nano"), temperature=0.0)
-    else:
-        raise ValueError("Nenhuma API key válida encontrada. Configure AZURE_OPENAI_ENDPOINT, OPENAI_API_KEY ou GOOGLE_API_KEY.")
-
-chat_model = get_model()
+chat_model = ChatOpenAI(model=os.getenv("OPENAI_CHAT_MODEL", "gpt-5-nano"), temperature=0.0)
 
 def main():
     try:

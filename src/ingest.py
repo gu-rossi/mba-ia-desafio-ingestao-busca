@@ -4,7 +4,7 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from pathlib import Path
 from langchain_core.documents import Document
-from langchain_openai import AzureOpenAIEmbeddings, OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain_postgres import PGVector
 
 load_dotenv()
@@ -12,23 +12,7 @@ load_dotenv()
 PDF_PATH = os.getenv("PDF_PATH")
 RAG_DIR = Path(__file__).parent.parent / PDF_PATH
 
-def get_embedding_model():
-    """
-    Retorna o modelo de embedding baseado nas variáveis de ambiente disponíveis.
-    Prioridade: Azure OpenAI > OpenAI
-    """
-    if os.getenv("AZURE_OPENAI_ENDPOINT"):
-        print("Usando Azure OpenAI...")
-        if not os.getenv("OPENAI_API_KEY"):
-            raise ValueError("A chave da API do OpenAI não está definida.")
-        return AzureOpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
-    elif os.getenv("OPENAI_API_KEY"):
-        print("Usando OpenAI...")
-        return OpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
-    else:
-        raise ValueError("Nenhuma API key válida encontrada. Configure AZURE_OPENAI_ENDPOINT, OPENAI_API_KEY ou GOOGLE_API_KEY.")
-
-embeddings = get_embedding_model()
+embeddings = OpenAIEmbeddings(model=os.getenv("OPENAI_EMBEDDING_MODEL", "text-embedding-3-small"))
 
 store = PGVector(
     embeddings=embeddings,
